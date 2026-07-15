@@ -1,0 +1,23 @@
+import time
+num_sprint = int(input("Enter the number of sprints you want to track: "))
+sprint_time = int(input("Enter the time for each sprint in seconds: "))
+rest_time = int(input("Enter the time for rest between each sprint in seconds:"))
+def countdown_timer(seconds,reps, rest):
+    for i in range(reps):
+        print(f"Round {i+1}")
+        current_time = seconds
+        while current_time > 0:
+            print(current_time)
+            current_time -=1
+            time.sleep(1)
+        if current_time == 0:
+            print("It is time to rest!")
+        current_rest  = rest
+        if i + 1 < reps:
+            while current_rest > 0:
+                print(current_rest)
+                current_rest -=1
+                time.sleep(1)
+        if current_rest == 0:
+            print("It is time to run!")
+countdown_timer(sprint_time, num_sprint, rest_time)
