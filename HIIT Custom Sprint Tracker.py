@@ -1,7 +1,40 @@
+from datetime import date
 import time
-num_sprint = int(input("Enter the number of sprints you want to track: "))
-sprint_time = int(input("Enter the time for each sprint in seconds: "))
-rest_time = int(input("Enter the time for rest between each sprint in seconds:"))
+import json
+import matplotlib.pyplot as plt
+try:
+        with open("data.json", "r") as file:
+            history = json.load(file)
+except (FileNotFoundError, json.JSONDecodeError):
+        history = []
+user_input = input("Do you want to view your history? Y/N: ").strip().lower()
+if user_input in ["yes", "y", "yeah", "yea"]:
+    print("\n=== Saved Workout History ===")
+    for session in history:
+        print("----------------")
+        print(f"Date: {session['Date']}")
+        print(f"Sprints: {session['Number of Sprints']}")
+        print(f"Sprint Time: {session['Sprint Time']} sec")
+        print(f"Rest Time: {session['Rest Time']} sec\n")
+
+else:
+    print("Ok, Start today's workout!")
+print(date.today())
+while True:
+    try:
+        num_sprint = int(input("Enter the number of sprints you want to track: "))
+        sprint_time = int(input("Enter the time for each sprint in seconds: "))
+        rest_time = int(input("Enter the time for rest between each sprint in seconds: "))
+        break
+    except ValueError:
+        print("Please enter a valid number: ")
+
+workout = {
+            "Date": str(date.today()),
+            "Number of Sprints": num_sprint,
+            "Sprint Time": sprint_time,
+            "Rest Time": rest_time}
+
 def countdown_timer(seconds,reps, rest):
     for i in range(reps):
         print(f"Round {i+1}")
@@ -21,3 +54,50 @@ def countdown_timer(seconds,reps, rest):
         if current_rest == 0:
             print("It is time to run!")
 countdown_timer(sprint_time, num_sprint, rest_time)
+history.append(workout)
+dates = [session["Date"] for session in history]
+sprint_times = [session["Sprint Time"] for session in history]
+rest_times = [session["Rest Time"] for session in history]
+
+plt.figure(figsize=(8,5))
+
+plt.plot(dates, sprint_times, marker="o", label="Sprint Time")
+plt.plot(dates, rest_times, marker="s", label="Rest Time")
+
+plt.legend()
+
+plt.title("Sprint vs Rest Time")
+plt.xlabel("Date")
+plt.ylabel("Seconds")
+
+plt.xticks(rotation=45)
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+
+with open("data.json", "w") as file:
+    json.dump(history, file, indent=4)
+print("\nWorkout History")
+
+for session in history:
+    print("----------------")
+    print(f"Date: {session['Date']}")
+    print(f"Sprints: {session['Number of Sprints']}")
+    print(f"Sprint Time: {session['Sprint Time']} sec")
+    print(f"Rest Time: {session['Rest Time']} sec\n")
+total_sprints = 0
+for session in history:
+    total_sprints += session["Number of Sprints"]
+print(f"\nTotal sprints completed: {total_sprints}")
+
+longest = max(session["Sprint Time"] for session in history)
+
+print(f"Longest sprint: {longest} sec")
+
+avg_rest = sum(session["Rest Time"] for session in history) / len(history)
+
+print(f"Average rest time: {avg_rest:.2f} sec")
+
+print("Good Job!")
+print(workout)
