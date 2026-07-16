@@ -1,34 +1,42 @@
-# Multi-Architecture HIIT Sprint Tracker & Analytics Engine
+# HIIT Sprint Tracker & Analytics Engine
 
-An independent, multi-phase software engineering project that tracks high-intensity interval training (HIIT) sprint parameters. This repository documents the evolution of an application from a local text-based data layer to a full-stack relational database infrastructure, preparing data pipelines for predictive machine learning models.
+A Python-based project that tracks high-intensity interval training (HIIT) sprint sessions. This repository documents the evolution of the application from JSON file storage to a MySQL database backend while adding analytics and data visualization.
 
 ## Project Evolution
 
-### Phase 1: Local State Serialization (`tracker_v1_json.py`)
-- **Architecture**: Local client-side script utilizing flat-file data structures.
-- **Data Layer**: High-performance JSON serialization for stateless persistence across runtimes.
-- **Safety**: Robust, defensive runtime type-checking via nested `try-except` blocks to prevent numerical invalidation crashes.
-- **Analytics**: Local data parsing engine calculating session volume aggregates, maximum execution thresholds, and rolling rest period averages.
+### Version 1 – JSON Storage
+**File:** `tracker_v1_json.py`
 
-### Phase 2: Full-Stack Relational Database Migration (`tracker_v2_mysql.py`)
-- **Architecture**: Client-Server architecture separating the execution loop from the persistence tier.
-- **Data Layer**: Local relational database management system using a XAMPP-hosted MariaDB/MySQL instance.
-- **Database Driver**: Integrated native SQL command execution via the `mysql-connector-python` API wrapper.
-- **Transactions**: Secure data routing protocols executing structured queries (`CREATE TABLE`, `INSERT INTO`, `SELECT`) with automatic transaction commits to ensure data integrity.
+- Stores workout sessions in a JSON file.
+- Calculates workout statistics such as:
+  - Total sprint volume
+  - Maximum sprint time
+  - Average rest time
+- Uses exception handling for input validation.
+- Saves data between program runs.
 
-### Current Roadmap
-- **Phase 3: Predictive ML Model**: Implementing `scikit-learn` and `pandas` to train a linear regression model on historical database parameters, automating personalized optimization of training structures based on historical exertion trends.
+### Version 2 – MySQL Database
+**File:** `tracker_v2_mysql.py`
+
+- Migrates workout data from JSON to a MySQL database.
+- Uses `mysql-connector-python` to communicate with MariaDB/MySQL.
+- Creates database tables and inserts workout sessions.
+- Retrieves stored workouts using SQL queries.
+- Improves data organization and scalability compared to JSON storage.
+
+### Planned Version 3 – Machine Learning
+**File:** `tracker_v3_ml.py` (planned)
+
+- Analyze historical workout data using pandas.
+- Train a regression model with scikit-learn.
+- Predict personalized sprint and rest recommendations.
 
 ## Tech Stack
-- **Languages**: Python, SQL
-- **Libraries & Tools**: Matplotlib, MySQL (XAMPP Server Environment), JSON, Time, Datetime
 
-## Database Schema Design
-```sql
-CREATE TABLE sprint_sessions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    workout_date DATE NOT NULL,
-    num_sprints INT NOT NULL,
-    sprint_time_sec INT NOT NULL,
-    rest_time_sec INT NOT NULL
-);
+- Python
+- SQL (MySQL / MariaDB)
+- Matplotlib
+- JSON
+- mysql-connector-python
+- pandas (planned)
+- scikit-learn (planned)
